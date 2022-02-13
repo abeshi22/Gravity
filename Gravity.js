@@ -13,11 +13,7 @@ const GRAVITY = 0.098;
 
 //初期化処理（キャンバス初期化　イベントリスナー初期化）
 function initialize() {
-    let ballX = 200;
-    let ballY = 100;
-    let ballDY = 1;
-    let s_time = new Date();
-    let time = 0;
+
 
     canvas = document.getElementById("myCanvas");
 
@@ -81,13 +77,14 @@ function resetGame(){
 
 
 function startGame(){
+    canvas.removeEventListener('click', startGame, false);
     drawBall();
     fall();
     collisionDetection();
-    requestAnimationFrame(startGame);
+    // requestAnimationFrame(startGame);
     // console.log(ballY + " : " + ballDY);
 }
 
 
-// メインの処理
-initialize();
+// ロードされたとき
+window.addEventListener('load', initialize, false);
