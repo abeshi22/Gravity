@@ -5,15 +5,16 @@ let drawTimerID;    //描画タイマー
 let raiseTimerID;   //上昇タイマー
 let dropTimerID;    //下降タイマー
 
-let ballX = 200;
-let ballY = 100;
+let ballX = 150;
+let ballY = [];
 let ballDY = 1;
+let ballTrajectory = 1;
 let s_time = new Date();
 let time = 0;
 const ballRadius = 2;   //ボール半径
 const GRAVITY = 0.0098; //重力加速度
-const CPS = 1;          //操作タイマーの周期
-const FPS = 10;         //描画タイマーの周期
+const CPS = 2;          //操作タイマーの周期
+const FPS = 6;         //描画タイマーの周期
 
 
 
@@ -38,14 +39,16 @@ function initialize() {
     }
 
     //ボール位置の初期化
-    ballY = 100;
-
+    ballY[0] = 100;
     //落下速度の初期化
     ballDY = 0;
-
+    for(i=1; i<=ballTrajectory; i++) {
+        ballY[i] = -10;
+    }
     //クリックでスタートの処理
     canvas.addEventListener('click', startGame, false);
 }
+
 
 //ゲームスタート
 function startGame(){
@@ -87,17 +90,29 @@ function dropBall(e){
 
 //ボール描画
 function drawBall(){
-        ctx.beginPath();
+        if(ballTrajectory > canvas.width/2) ballTrajectory = canvas.width/2;   
+
+        // ctx.beginPath();
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#ffffff";
-        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2)
-        ctx.fill();
-        ctx.closePath();
+        for(let i=0; i<ballTrajectory; i++){
+            // ctx.arc(ballX-i, ballY[i], ballRadius, 0, Math.PI*2);
+            // ctx.fill();
+            ctx.fillRect(ballX-i, ballY[i], ballRadius, ballRadius);
+            
+        }
+        // ctx.closePath();
 
-        ballY += ballDY;
+        for (let i=ballTrajectory; i>0; i--){
+            ballY[i] = ballY[i-1];
+        }
+        ballY[0] += ballDY;
+        ballTrajectory++;
+        
+        
 
-        if(ballY >= (canvas.height-ballRadius) || ballY<ballRadius) resetGame();
+        if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
 
 
