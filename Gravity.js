@@ -104,6 +104,7 @@ function drawBall(){
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#ffffff";
         for(let i=0; i<ballTrajectory; i++){
+            // arcは描画が遅い？Rectにしてみる
             // ctx.arc(ballX-i, ballY[i], ballRadius, 0, Math.PI*2);
             // ctx.fill();
             ctx.fillRect(ballX-i, ballY[i], ballRadius, ballRadius);
@@ -121,6 +122,7 @@ function drawBall(){
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
 
+//スコア（距離）の描画
 function drawDistance(){
     ctx.font = "16px Arial";
     ctx.fillStyle = "#ffffff";
