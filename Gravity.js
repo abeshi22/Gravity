@@ -11,6 +11,7 @@ let ballDY = 1;
 let ballTrajectory = 1;
 let s_time = new Date();
 let time = 0;
+let distance = 0;
 const ballRadius = 2;   //ボール半径
 const GRAVITY = 0.0098; //重力加速度
 const CPS = 2;          //操作タイマーの周期
@@ -30,6 +31,12 @@ function initialize() {
         ctx = canvas.getContext("2d");
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        if(distance != 0){
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText("Score: " + distance,100,200);
+        }
     
         ctx.font = "18px 'ＭＳ ゴシック'";
         ctx.fillStyle = "#ffffff";
@@ -52,6 +59,7 @@ function initialize() {
 
 //ゲームスタート
 function startGame(){
+    distance = 0;
     //キャンバス黒塗り
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -65,7 +73,6 @@ function startGame(){
     dropTimerID = setInterval(() => {ballDY += GRAVITY }, CPS);
     drawTimerID = setInterval(drawBall, FPS);
 
-    // collisionDetection();
 }
 
 
@@ -100,7 +107,6 @@ function drawBall(){
             // ctx.arc(ballX-i, ballY[i], ballRadius, 0, Math.PI*2);
             // ctx.fill();
             ctx.fillRect(ballX-i, ballY[i], ballRadius, ballRadius);
-            
         }
         // ctx.closePath();
 
@@ -109,12 +115,17 @@ function drawBall(){
         }
         ballY[0] += ballDY;
         ballTrajectory++;
+        distance++;
+        drawDistance();
         
-        
-
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
 
+function drawDistance(){
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("Score: " + distance, 10,20);
+}
 
 //リセット処理
 function resetGame(){
