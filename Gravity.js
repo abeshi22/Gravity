@@ -18,6 +18,7 @@ const ballRadius = 2;   //ボール半径 -> 描画方法をarcからfillRectに
 const GRAVITY = 0.0098; //重力加速度
 const CPS = 2;          //操作タイマーの周期
 const FPS = 6;         //描画タイマーの周期
+const BLOCK_HEIGHT = 80;
 
 
 
@@ -74,6 +75,7 @@ function startGame(){
     //drop/raiseのタイマー設定
     dropTimerID = setInterval(() => {ballDY += GRAVITY }, CPS);
     drawTimerID = setInterval(drawBall, FPS);
+    blockTimerID = setTimeout(generateBlock, 2000);
 
 }
 
@@ -120,6 +122,7 @@ function drawBall(){
         ballTrajectory++;
         distance++;
         drawDistance();
+        drawBlock();
         
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
@@ -127,11 +130,21 @@ function drawBall(){
 //障害物を作りたい
 function generateBlock(){
     let height = canvas.height * Math.random();
+    block[0] = height;
 
     blockTimerID = setTimeout(generateBlock, 2000);
 }
 
-
+function drawBlock(){
+    ctx.strokeStyle = "#ffff00";
+    ctx.beginPath();
+    // for (let i=0; i<canvas.width; i++){
+        ctx.moveTo(canvas.width, block[i]-BLOCK_HEIGHT);
+        ctx.lineTo(canvas.width, block[i]+BLOCK_HEIGHT);
+    // }
+    ctx.closePath();
+    ctx.stroke();
+}
 
 
 //スコア（距離）の描画
