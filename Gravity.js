@@ -131,19 +131,18 @@ function drawBall(){
 function generateBlock(){
     let height = canvas.height * Math.random();
     block[0] = height;
+    console.log(block[0]);
 
     blockTimerID = setTimeout(generateBlock, 2000);
 }
 
 function drawBlock(){
-    ctx.strokeStyle = "#ffff00";
+    ctx.fillStyle = "#ffff00";
     ctx.beginPath();
     // for (let i=0; i<canvas.width; i++){
-        ctx.moveTo(canvas.width, block[i]-BLOCK_HEIGHT);
-        ctx.lineTo(canvas.width, block[i]+BLOCK_HEIGHT);
+        ctx.fillRect(canvas.width/2, block[0],20,160);
     // }
     ctx.closePath();
-    ctx.stroke();
 }
 
 
