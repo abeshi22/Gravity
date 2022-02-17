@@ -4,6 +4,7 @@ let ctx;
 let drawTimerID;    //描画タイマー
 let raiseTimerID;   //上昇タイマー
 let dropTimerID;    //下降タイマー
+let blockTimerID;   //障害物生成タイマー
 
 let ballX = 150;
 let ballY = [];
@@ -12,7 +13,8 @@ let ballTrajectory = 1;
 let s_time = new Date();
 let time = 0;
 let distance = 0;
-const ballRadius = 2;   //ボール半径
+let block = [];
+const ballRadius = 2;   //ボール半径 -> 描画方法をarcからfillRectに変えたので矩形の縦横の値
 const GRAVITY = 0.0098; //重力加速度
 const CPS = 2;          //操作タイマーの周期
 const FPS = 6;         //描画タイマーの周期
@@ -121,6 +123,16 @@ function drawBall(){
         
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
+
+//障害物を作りたい
+function generateBlock(){
+    let height = canvas.height * Math.random();
+
+    blockTimerID = setTimeout(generateBlock, 2000);
+}
+
+
+
 
 //スコア（距離）の描画
 function drawDistance(){
