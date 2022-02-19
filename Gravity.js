@@ -59,7 +59,7 @@ function initialize() {
         ballY[i] = -10;
     }
     //ブロック初期化
-    for(let i=0; i<ballX; i++){
+    for(let i=0; i<canvas.width; i++){
         blockFlg[i] = false;
     }
 
@@ -133,7 +133,15 @@ function drawBall(){
         drawDistance();
         drawBlock();
         
+
+        //キャンバス上下との当たり判定
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
+        //
+        if((blockFlg[(canvas.width-ballX)]==true) &&
+            ballY[0] >= (block[(canvas.width-ballX)]-BLOCK_HEIGHT) &&
+            ballY[0] <= (block[(canvas.width-ballX)]+BLOCK_HEIGHT)){
+                resetGame();
+        }
 }
 
 
@@ -155,7 +163,7 @@ function drawBlock(){
     ctx.strokeStyle = "#ffff00";
     ctx.beginPath();
     for (let i=0; i<canvas.width; i++){
-        if(blockFlg[i] = true){
+        if(blockFlg[i] == true){
             ctx.moveTo(canvas.width-i, block[i]-BLOCK_HEIGHT);
             ctx.lineTo(canvas.width-i, block[i]+BLOCK_HEIGHT);
         }
