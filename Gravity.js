@@ -14,11 +14,14 @@ let s_time = new Date();
 let time = 0;
 let distance = 0;
 let block = [];
+let blockFlg = [];
 const ballRadius = 2;   //ボール半径 -> 描画方法をarcからfillRectに変えたので矩形の縦横の値
 const GRAVITY = 0.0098; //重力加速度
 const CPS = 2;          //操作タイマーの周期
-const FPS = 6;         //描画タイマーの周期
-const BLOCK_HEIGHT = 80;
+const FPS = 6;          //描画タイマーの周期
+const BPS = 2000;       //ブロック描画の周期
+const BLOCK_HEIGHT = 80;    //障害物の高さの半分
+const BLOCK_WIDTH = 20;     //障害物の幅
 
 
 
@@ -55,6 +58,12 @@ function initialize() {
     for(i=1; i<=ballTrajectory; i++) {
         ballY[i] = -10;
     }
+    //ブロック初期化
+    for(let i=0; i<ballX; i++){
+        blockFlg[i] = false;
+    }
+
+
     //クリックでスタートの処理
     canvas.addEventListener('click', startGame, false);
 }
@@ -75,7 +84,7 @@ function startGame(){
     //drop/raiseのタイマー設定
     dropTimerID = setInterval(() => {ballDY += GRAVITY }, CPS);
     drawTimerID = setInterval(drawBall, FPS);
-    blockTimerID = setTimeout(generateBlock, 2000);
+    blockTimerID = setTimeout(generateBlock, BPS);
 
 }
 
@@ -127,22 +136,37 @@ function drawBall(){
         if(ballY[0] >= (canvas.height-ballRadius) || ballY[0]<ballRadius) resetGame();
 }
 
+
 //障害物を作りたい
 function generateBlock(){
     let height = canvas.height * Math.random();
-    block[0] = height;
-    console.log(block[0]);
+    
+    for(let i=1; i<=BLOCK_WIDTH; i++){
+        block[i] = height;
+        blockFlg[i] = true;
+    }
+    blockFlg[0] = false;
 
-    blockTimerID = setTimeout(generateBlock, 2000);
+    blockTimerID = setTimeout(generateBlock, BPS);
 }
 
+
 function drawBlock(){
-    ctx.fillStyle = "#ffff00";
+    ctx.strokeStyle = "#ffff00";
     ctx.beginPath();
-    // for (let i=0; i<canvas.width; i++){
-        ctx.fillRect(canvas.width/2, block[0],20,160);
-    // }
+    for (let i=0; i<canvas.width; i++){
+        if(blockFlg[i] = true){
+            ctx.moveTo(canvas.width-i, block[i]-BLOCK_HEIGHT);
+            ctx.lineTo(canvas.width-i, block[i]+BLOCK_HEIGHT);
+        }
+    }
     ctx.closePath();
+    ctx.stroke();
+
+    for(let i=canvas.width; i>0; i--){
+        block[i] = block[i-1];
+        blockFlg[i] = blockFlg[i-1];
+    }
 }
 
 
@@ -158,6 +182,7 @@ function resetGame(){
     clearInterval(drawTimerID);
     clearInterval(raiseTimerID);
     clearInterval(dropTimerID);
+    clearInterval(blockTimerID);
     canvas.removeEventListener("mousedown", raiseBall, false);
     canvas.removeEventListener("mouseup", dropBall, false);
     initialize();
